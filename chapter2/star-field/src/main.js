@@ -1,17 +1,27 @@
-// const gameType = "awesome";
-// alert(`Let's make ${ gameType } games!`);
+const canvas = document.querySelector("#board canvas");
+const ctx = canvas.getContext("2d");
+const {
+    width: w,
+    height: h
+} = canvas;
 
-const myGuess = Math.floor(Math.random() * 20) + 1;
-let guesses = 0;
-let guess;
+const randColor = () => Math.floor(Math.random() * 255);
 
-while (guess !== myGuess) {
-    guess = parseInt(prompt("What number am I thinking of?"), 10);
-    guesses++;
-    if (guess < myGuess) {
-        alert("Higher.");
-    } else if (guess > myGuess) {
-        alert("Lower.");
-    }
+ctx.fillStyle = "black";
+ctx.fillRect(0, 0, w, h);
+
+
+let x, y, radius;
+
+for (let i = 0; i < 550; i++) {
+    ctx.fillStyle = `rgb(${randColor()}, ${randColor()}, ${randColor()})`;
+    
+    x = Math.random() * w;
+    y = Math.random() * h;
+    radius = Math.random() * 3;
+
+    // draw the star!
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+    ctx.fill();
 }
-alert(`Well done! You got it in ${ guesses }!`);
