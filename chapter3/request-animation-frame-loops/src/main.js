@@ -5,6 +5,14 @@ const {
     height: h
 } = canvas;
 
+/* Request Animation Frame Boilerplate
+// Game setup code
+function loopy (t) {
+requestAnimationFrame(loopy);
+// Game logic code
+}
+requestAnimationFrame(loopy); // Start things running!
+*/
 
 // Game setup code
 // Set background color
