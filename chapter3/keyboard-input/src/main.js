@@ -1,3 +1,5 @@
+import KeyControls from "../lib/KeyControls.js";
+
 const canvas = document.querySelector("#board canvas");
 const ctx = canvas.getContext("2d");
 const {
@@ -5,33 +7,14 @@ const {
     height: h
 } = canvas;
 
-/* Request Animation Frame Boilerplate w/ delta time
-// Game setup
-let dt = 0;
-let last = 0;
-
-function loopy (ms) {
-    requestAnimationFrame(loopy);
-
-    const t = ms / 1000; // Let's work in seconds
-    dt = t - last;
-    last = t;
-
-// Game logic code
-}
-requestAnimationFrame(loopy);
-*/
-
 // Game setup code
-ctx.strokeStyle = "#fff";
-ctx.font = "30pt monospace";
-
-const speed = 64;
-let p1 = 0;
-let p2 = 0;
-
 let dt = 0;
 let last = 0;
+
+let x = w / 2;
+let y = h / 2;
+let color = 0;
+const controls = new KeyControls();
 
 function loopy(ms) {
     requestAnimationFrame(loopy);
@@ -40,18 +23,16 @@ function loopy(ms) {
     last = t;
 
     // Game logic code
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, w, h);
-    ctx.strokeText(`Frame length: ${(dt * 1000).toFixed(2)} ms`, 70, 50);
-    ctx.strokeText(`Total time: ${t.toFixed(2)}`, 70, 90);
-
-    p1 += speed * dt;
-    p2 += speed * (1 / 60);
-    // If square passes edge, send to start
-    if (p1 > w) p1 -= w + 50;
-    if (p2 > w) p2 -= w + 50;
-    ctx.fillStyle = "#f00";
-    ctx.fillRect(p1, 120, 50, 50);
-    ctx.fillRect(p2, 190, 50, 50);
+    x += controls.x;
+    y += controls.y;
+    if (!controls.action) {
+        color += 10;
+        if (color > 360) {
+            color -= 360;
+        }
+    }
+    // Draw the rectangle
+    ctx.fillStyle = `hsl(${color}, 50%, 50%)`;
+    ctx.fillRect(x, y, 50, 50);
 }
 requestAnimationFrame(loopy);

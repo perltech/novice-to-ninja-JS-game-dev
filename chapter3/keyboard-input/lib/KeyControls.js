@@ -14,6 +14,7 @@ class KeyControls {
         }, false);
 
     }
+
     // Handle key actions
     get action() {
         // Space key is bound to action
@@ -22,6 +23,21 @@ class KeyControls {
     // if (keys.action) {
     //     // Jump, or shoot, or …
     // }
+
+    // Getting and setting a key's state directly
+    key(key, value) {
+        if (value !== undefined) {
+            this.keys[key] = value;
+        }
+        return this.keys[key];
+    }
+
+    // Move all keys being pressed down to false, stops continuous input
+    reset() {
+        for (let key in this.keys) {
+            this.keys[key] = false;
+        }
+    }
 
     get x() {
         // left arrow or A key
