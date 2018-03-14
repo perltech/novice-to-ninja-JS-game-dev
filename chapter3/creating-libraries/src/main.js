@@ -24,4 +24,27 @@ message.pos.y = h / 2;
 scene.add(message);
 
 // Render the main container
-renderer.render(scene);
+//renderer.render(scene);
+
+// Animate scrolling on message
+message.update = function (dt) {
+  this.pos.x -= 100 * dt;
+  if (this.pos.x < -420) {
+    this.pos.x = w;
+  }
+};
+scene.add(message);
+
+let dt = 0;
+let last = 0;
+
+// Infinite loop to continuously execute rendering, targeting the canvas
+function loopy(ms) {
+  requestAnimationFrame(loopy);
+  const t = ms / 1000;
+  dt = t - last;
+  last = t;
+  scene.update(dt, t);
+  renderer.render(scene);
+}
+requestAnimationFrame(loopy);
