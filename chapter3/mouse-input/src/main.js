@@ -13,7 +13,7 @@ function loopy() {
   // Game logic code
   const x = mouse.pos.x;
   const y = mouse.pos.y;
-  if (mouse.pressed) {
+  if (mouse.pressed || mouse.isDown) {
     color += 10;
     if (color > 360) {
       color -= 360;
