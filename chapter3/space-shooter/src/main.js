@@ -20,7 +20,8 @@ const scene = new Container();
 // Load game textures
 const textures = {
   background: new Texture("res/images/bg.png"),
-  spaceship: new Texture("res/images/spaceship.png")
+  spaceship: new Texture("res/images/spaceship.png"),
+  bullet: new Texture("res/images/bullet.png")
 };
 
 const controls = new KeyControls();
@@ -30,7 +31,9 @@ ship.pos.x = 120;
 ship.pos.y = h / 2 - 16;
 ship.update = function (dt, t) {
   // Update the player position
-  const {pos} = this;
+  const {
+    pos
+  } = this;
   pos.x += controls.x * dt * 200;
   pos.y += controls.y * dt * 200;
 
@@ -40,9 +43,26 @@ ship.update = function (dt, t) {
   if (pos.y > h) pos.y = h;
 };
 
+// Bullets
+const bullets = new Container();
+
+function fireBullet(x, y) {
+  const bullet = new Sprite(textures.bullet);
+  bullet.pos.x = x;
+  bullet.pos.y = y;
+  bullet.update = function (dt) {
+    this.pos.x += 400 * dt;
+  };
+  bullets.add(bullet);
+}
 // Add everything to the scene container
 scene.add(new Sprite(textures.background));
 scene.add(ship);
+scene.add(bullets);
+
+// Game state variables
+let lastShot = 0;
+
 
 let dt = 0;
 let last = 0;
@@ -55,5 +75,13 @@ function loopy(ms) {
   last = t;
   scene.update(dt, t);
   renderer.render(scene);
+
+  /* Game logic code */
+
+  // Create clone of bullet with a 1500ms timer
+  if (controls.action && t - lastShot > 0.15) {
+    lastShot = t;
+    fireBullet(ship.pos.x + 24, ship.pos.y + 10);
+  }
 }
 requestAnimationFrame(loopy);
