@@ -73,8 +73,6 @@ function loopy(ms) {
   const t = ms / 1000;
   dt = t - last;
   last = t;
-  scene.update(dt, t);
-  renderer.render(scene);
 
   /* Game logic code */
 
@@ -85,8 +83,14 @@ function loopy(ms) {
   }
 
   // Destroy bullets when they go out of the screen
-  bullets.children = bullets.children.filter(bullet => {
-    return bullet.pos.x < w + 20;
+  bullets.children.forEach(bullet => {
+    if (bullet.pos.x > w + 20) {
+      bullet.dead = true;
+    }
   });
+
+  // Update & render everything
+  scene.update(dt, t);
+  renderer.render(scene);
 }
 requestAnimationFrame(loopy);
