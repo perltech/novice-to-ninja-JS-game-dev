@@ -6,7 +6,6 @@ class KeyControls {
             if ([37, 38, 39, 40].indexOf(e.which) >= 0) {
                 e.preventDefault();
             }
-            console.log(e.which)
             this.keys[e.which] = true;
         }, false);
         document.addEventListener("keyup", e => {

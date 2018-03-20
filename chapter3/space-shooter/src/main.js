@@ -21,7 +21,8 @@ const scene = new Container();
 const textures = {
   background: new Texture("res/images/bg.png"),
   spaceship: new Texture("res/images/spaceship.png"),
-  bullet: new Texture("res/images/bullet.png")
+  bullet: new Texture("res/images/bullet.png"),
+  enemy: new Texture("res/images/baddie.png")
 };
 
 const controls = new KeyControls();
@@ -48,6 +49,7 @@ const bullets = new Container();
 
 function fireBullet(x, y) {
   const bullet = new Sprite(textures.bullet);
+
   bullet.pos.x = x;
   bullet.pos.y = y;
   bullet.update = function (dt) {
@@ -55,17 +57,35 @@ function fireBullet(x, y) {
   };
   bullets.add(bullet);
 }
+
+// Spawn bad guys
+const enemies = new Container();
+
+function spawnEnemy(x, y, speed) {
+  const enemy = new Sprite(textures.enemy);
+
+  enemy.pos.x = x;
+  enemy.pos.y = y;
+  enemy.update = function (dt) {
+    this.pos.x += speed * dt;
+  }
+  enemies.add(enemy);
+}
+
 // Add everything to the scene container
 scene.add(new Sprite(textures.background));
 scene.add(ship);
 scene.add(bullets);
+scene.add(enemies);
 
 // Game state variables
-let lastShot = 0;
-
-
 let dt = 0;
 let last = 0;
+
+let lastShot = 0;
+
+let lastSpawn = 0;
+let spawnSpeed = 1.0;
 
 // Infinite loop to continuously execute rendering, targeting the canvas
 function loopy(ms) {
@@ -88,6 +108,16 @@ function loopy(ms) {
       bullet.dead = true;
     }
   });
+
+  // Spawn bad guys
+  if (t - lastSpawn > spawnSpeed) {
+    lastSpawn = t;
+    const speed = -50 - (Math.random() * Math.random() * 100);
+    const position = Math.random() * (h - 24);
+    spawnEnemy(w, position, speed);
+    // Accelerating for the next spawn
+    spawnSpeed = spawnSpeed < 0.05 ? 0.6 : spawnSpeed * 0.97 + 0.001;
+  }
 
   // Update & render everything
   scene.update(dt, t);
