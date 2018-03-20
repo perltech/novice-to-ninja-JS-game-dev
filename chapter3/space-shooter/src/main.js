@@ -3,6 +3,7 @@ const {
   Container,
   CanvasRenderer,
   KeyControls,
+  Text,
   Texture,
   Sprite
 } = pop;
@@ -72,11 +73,36 @@ function spawnEnemy(x, y, speed) {
   enemies.add(enemy);
 }
 
+// Add the score game object
+const score = new Text(`score:`, {
+  font: "20px sans-serif",
+  fill: "#8B8994",
+  align: "center"
+});
+score.pos = {
+  x: w / 2,
+  y: h - 30
+};
+
+function doGameOver() {
+  const gameOverMessage = new Text("Game Over", {
+    font: "30pt sans-serif",
+    fill: "#8B8994",
+    align: "center"
+  });
+  gameOverMessage.pos.x = w / 2;
+  gameOverMessage.pos.y = 120;
+  scene.add(gameOverMessage);
+  scene.remove(ship);
+  gameOver = true;
+}
+
 // Add everything to the scene container
 scene.add(new Sprite(textures.background));
 scene.add(ship);
 scene.add(bullets);
 scene.add(enemies);
+scene.add(score);
 
 // Game state variables
 let dt = 0;
@@ -87,6 +113,9 @@ let lastShot = 0;
 let lastSpawn = 0;
 let spawnSpeed = 1.0;
 
+let scoreAmount = 0;
+let gameOver = false;
+
 // Infinite loop to continuously execute rendering, targeting the canvas
 function loopy(ms) {
   requestAnimationFrame(loopy);
@@ -95,17 +124,41 @@ function loopy(ms) {
   last = t;
 
   /* Game logic code */
+  ship.pos.x += Math.sin(t * 10); // animate back and forth
+  score.text = `score: ${scoreAmount}`; // update score
 
   // Create clone of bullet with a 1500ms timer
-  if (controls.action && t - lastShot > 0.15) {
+  if (!gameOver && controls.action && t - lastShot > 0.15) {
     lastShot = t;
     fireBullet(ship.pos.x + 24, ship.pos.y + 10);
   }
 
-  // Destroy bullets when they go out of the screen
-  bullets.children.forEach(bullet => {
-    if (bullet.pos.x > w + 20) {
-      bullet.dead = true;
+  // Check for collisions, or out of screen
+  enemies .children.forEach(baddie => {
+    bullets.children.forEach(bullet => {
+
+      // Check distance between baddie and bullet
+      const dx = baddie.pos.x + 16 - (bullet.pos.x + 8);
+      const dy = baddie.pos.y + 16 - (bullet.pos.y + 8);
+      if (Math.sqrt(dx * dx + dy * dy) < 24) {
+        // A hit!
+        bullet.dead = true;
+        baddie.dead = true;
+        scoreAmount += Math.floor(t);
+        console.log(scoreAmount);
+      }
+      // Bullet out of the screen?
+      if (bullet.pos.x >= w + 20) {
+        bullet.dead = true;
+      }
+    });
+
+    // Check if baddie reached the city
+    if (baddie.pos.x < -32) {
+      if (!gameOver) {
+        doGameOver();
+      }
+      baddie.dead = true;
     }
   });
 
