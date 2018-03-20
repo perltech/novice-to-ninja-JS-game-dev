@@ -83,5 +83,10 @@ function loopy(ms) {
     lastShot = t;
     fireBullet(ship.pos.x + 24, ship.pos.y + 10);
   }
+
+  // Destroy bullets when they go out of the screen
+  bullets.children = bullets.children.filter(bullet => {
+    return bullet.pos.x < w + 20;
+  });
 }
 requestAnimationFrame(loopy);
