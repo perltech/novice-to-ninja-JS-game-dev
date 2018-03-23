@@ -31,7 +31,10 @@ const controls = new KeyControls();
 const ship = new Sprite(textures.spaceship);
 ship.pos.x = 120;
 ship.pos.y = h / 2 - 16;
-ship.scale = { x: 3, y: 0.5 };
+ship.scale = {
+  x: 3,
+  y: 0.5
+};
 ship.rotation = Math.PI / 4;
 ship.update = function (dt, t) {
   // Update the player position
@@ -47,9 +50,11 @@ ship.update = function (dt, t) {
   if (pos.y > h) pos.y = h;
 
   // Wobbly ship
-const { scale } = this;
-scale.x = Math.abs(Math.sin(t)) + 1;
-scale.y = Math.abs(Math.sin(t * 1.33)) + 1;
+  const {
+    scale
+  } = this;
+  scale.x = Math.abs(Math.sin(t)) + 1;
+  scale.y = Math.abs(Math.sin(t * 1.33)) + 1;
 };
 
 // Bullets
@@ -103,6 +108,19 @@ function doGameOver() {
   scene.remove(ship);
   gameOver = true;
 }
+
+// const buildings = scene.add(new Container());
+// const makeRandom = (b, x) => {
+//   // Place the building at x position, with random scale
+// };
+// game.run(dt => {
+//   buildings.map(b => {
+//     b.pos.x -= 100 * dt;
+//     if (b.pos.x < -80) {
+//       makeRandom(b, w);
+//     }
+//   });
+// });
 
 // Add everything to the scene container
 scene.add(new Sprite(textures.background));
