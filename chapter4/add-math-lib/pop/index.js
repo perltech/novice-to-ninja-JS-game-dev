@@ -15,6 +15,7 @@ import math from './utils/math.js';
 export default {
     Game,
     Container,
+    math,
     KeyControls,
     MouseControls,
     CanvasRenderer,
