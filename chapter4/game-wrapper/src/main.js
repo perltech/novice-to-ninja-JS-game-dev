@@ -31,6 +31,8 @@ const controls = new KeyControls();
 const ship = new Sprite(textures.spaceship);
 ship.pos.x = 120;
 ship.pos.y = h / 2 - 16;
+ship.scale = { x: 3, y: 0.5 };
+ship.rotation = Math.PI / 4;
 ship.update = function (dt, t) {
   // Update the player position
   const {
@@ -43,6 +45,11 @@ ship.update = function (dt, t) {
   if (pos.x > w) pos.x = w;
   if (pos.y < 0) pos.y = 0;
   if (pos.y > h) pos.y = h;
+
+  // Wobbly ship
+const { scale } = this;
+scale.x = Math.abs(Math.sin(t)) + 1;
+scale.y = Math.abs(Math.sin(t * 1.33)) + 1;
 };
 
 // Bullets
@@ -134,8 +141,8 @@ function loopy(ms) {
   }
 
   // Check for collisions, or out of screen
-  enemies .children.forEach(baddie => {
-    bullets.children.forEach(bullet => {
+  enemies.map(baddie => {
+    bullets.map(bullet => {
 
       // Check distance between baddie and bullet
       const dx = baddie.pos.x + 16 - (bullet.pos.x + 8);

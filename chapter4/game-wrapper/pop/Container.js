@@ -17,6 +17,11 @@ class Container {
         return child;
     }
 
+    // Helper to apply logic to all children
+    map(f) {
+        return this.children.map(f);
+    }
+
     update(dt, t) {
         this.children = this.children.filter(child => {
             if (child.update) {

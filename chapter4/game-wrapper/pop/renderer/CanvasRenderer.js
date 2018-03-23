@@ -9,7 +9,9 @@ class CanvasRenderer {
     }
 
     render(container, clear = true) {
-        const {ctx} = this;
+        const {
+            ctx
+        } = this;
 
         function renderRec(container) {
             // Render the container children
@@ -23,6 +25,10 @@ class CanvasRenderer {
                 // Draw the leaf node
                 if (child.pos) { // If child has pos element, translate it.
                     ctx.translate(Math.round(child.pos.x), Math.round(child.pos.y));
+                }
+
+                if (child.scale) {
+                    ctx.scale(child.scale.x, child.scale.y);
                 }
 
                 if (child.text) {
